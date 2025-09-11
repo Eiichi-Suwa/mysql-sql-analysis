@@ -1,5 +1,5 @@
 {
-  "name": "mysql-plan-analysis",
+  "name": "mysql-sql-analysis",
   "dockerComposeFile": "../docker-compose.yml",
   "service": "mysql",
   "customizations": {

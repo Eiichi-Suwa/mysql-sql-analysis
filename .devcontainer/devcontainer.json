@@ -1,0 +1,12 @@
+{
+  "name": "mysql-plan-analysis",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "mysql",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "cweijan.vscode-database-client2"
+      ]
+    }
+  }
+}

@@ -1,6 +1,9 @@
 # はじめに
 MySQLを使ったSQLや実行計画を学習するためのリポジトリです。
 
+## 利用上の注意
+- `Github`の`Codespace`を利用します。`Codespace`は設定によってはコストがかかるものなので [Codespaceの利用上の注意](#Codespaceの利用上の注意) はよく確認してください。
+
 ## 使い方
 ※ ローカルで`docker-compose.yml`を起動する場合は`.env`ファイルのユーザーIDとパスワードを設定してから、起動してください。<br>ここでは`Codespaces`で起動する方法を記載しています。
 
@@ -22,14 +25,14 @@ MySQLを使ったSQLや実行計画を学習するためのリポジトリです
 1. シークレットの設定が完了したら以下の画像のようになります。
   ![success-setting](./assets/success-setting.png)
 1. シークレット完了後、`Codespace`を起動するため、`Code`タブに移動し、右上にある緑色の`code`のプルダウンメニューを開き、`Codespace`タブを開き、`Create codespace on main`をクリックします。
-  ![success-setting](./assets/success-setting.png)
+  ![success-setting](./assets/start-code-space.png)
 1. `Codespace`の生成にはしばらく時間がかかるため、しばらく待ちます。<br>
   ![create-now](./assets/create-now.png)
 1. `VSCode`が起動しますが、画面右下が`リモートを開いています...`の間は待ちます。<br>
   ![vscode-setup-now](./assets/vscode-setup-now.png)
 1. 画面右下が`Codespace`になった場合は、`VSCode`が起動しました。<br>
   ![vscode-setup-finish](./assets/vscode-setup-finish.png)
-1. `MySQL`に接続するため、右側の筒状のアイコンをクリックして`new connection`をクリックします。（もし、`new connection`をクリックしても反応が無い場合は、Webブラウザをリロードしてみてください）<br>
+1. `MySQL`に接続するため、右側の筒状のアイコンをクリックして`Create connection`をクリックします。（もし、`Create connection`をクリックしても反応が無い場合は、Webブラウザをリロードしてみてください）<br>
   ![new-connection](./assets/new-connection.png)
 1. 画面中央に接続設定が表示されるので`Name`に`mysql`、`Host`に`mysql`、`database`に`mydatabase`、`Username`に`root`と入力する。`Password`に`Secret`の`MYSQL_ROOT_PASSWORD`に設定した値を入力します。<br>
   ![connection-settings](./assets/connection-settings.png)
@@ -77,3 +80,13 @@ erDiagram
     string 部活
   }
 ```
+
+## Codespaceの利用上の注意
+- アカウントの種類が個人であり、クレジットカードを登録していない想定です。この条件であれば上限を超過すると使えなくなるだけ（のはず！）です。
+
+### アカウントの確認
+- `Github`には`個人アカウント`以外にも`Organization アカウント`と`Enterprise アカウント`があります。
+- 画面右上の自分のアカウントをクリックして`Organizations`をクリックして組織が表示されず「Organizations You are not a member of any organizations.」という表示のみであれば個人アカウント<br>
+  ![my-organizations](./assets/my-organizations.png)
+- （追記中）
+

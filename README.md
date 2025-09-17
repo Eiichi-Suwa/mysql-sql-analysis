@@ -3,6 +3,7 @@ MySQLを使ったSQLや実行計画を学習するためのリポジトリです
 
 ## 利用上の注意
 - `Github`の`Codespace`を利用します。`Codespace`は設定によってはコストがかかるものなので [Codespaceの利用上の注意](#Codespaceの利用上の注意) はよく確認してください。
+- コストをかけないためにも、セキュリティの意味でも、使い終わったら必ず [停止方法](#停止方法) に従って停止してください。
 
 ## 使い方
 ※ ローカルで`docker-compose.yml`を起動する場合は`.env`ファイルのユーザーIDとパスワードを設定してから、起動してください。<br>ここでは`Codespaces`で起動する方法を記載しています。
@@ -44,6 +45,13 @@ MySQLを使ったSQLや実行計画を学習するためのリポジトリです
   ![create-query](./assets/create-query.png)
 1. 生成したクエリのファイルに適当なSQLを記述してSQLの上部に出てくる`Run`をクリックするとSQLを実行できます。<br>
   ![run-query](./assets/run-query.png)
+
+## 停止方法
+1. `Code`タブに移動し、右上にある緑色の`code`のプルダウンメニューを開き、`Codespace`タブを開き、`Active`の右側にある三点リーダー（・・・）をクリックして`Delete`をクリックします。<br>
+  ![stop-code-space](./assets/stop-code-space.png)
+1. 確認ダイアログが表示されるので`Delete`をクリックします。<br>
+  ![delete-code-space](./assets/delete-code-space.png)
+
 
 ## ER図
 ```mermaid

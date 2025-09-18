@@ -126,11 +126,11 @@ WHERE
 -- 1) 学校：200件
 -- =========================================
 INSERT INTO
-    School (
-        SchoolID,
-        SchoolLocation,
-        District,
-        SchoolName
+    schools  (
+        school_id,
+        school_location,
+        district,
+        school_name
     )
 SELECT LPAD(n + 1, 4, '0'), CONCAT('所在地', n + 1), CONCAT('第', (n % 10) + 1, '学区'), CONCAT('サンプル高校', n + 1)
 FROM tmp_seq
@@ -140,8 +140,8 @@ WHERE
 -- =========================================
 -- 2) 生徒
 --   A) 在学:   0..19999 (2万)
---   B) 入学前: 20000..20999 (1000) → Grade=0, Score/Clubは作らない
---   C) 卒業:   21000..21999 (1000) → Grade=9, GraduationDate=YYYY-03-31
+--   B) 入学前: 20000..20999 (1000) → grade=0, scores/clubsは作らない
+--   C) 卒業:   21000..21999 (1000) → grade=9, graduation_date=YYYY-03-31
 -- =========================================
 
 -- 共通: 入学月を決める（5% だけ 5〜3 月、それ以外は 4 月）
@@ -150,27 +150,29 @@ WHERE
 
 -- A) 在学（2万）
 INSERT INTO
-    Student (
-        StudentID,
-        Name,
-        Gender,
-        Address,
-        Grade,
-        Class,
-        Teacher,
-        EnrollmentDate,
-        GraduationDate,
-        SchoolID
+    students (
+        student_Id,
+        name,
+        gender,
+        address,
+        grade,
+        class,
+        teacher,
+        enrollment_date,
+        graduation_date,
+        school_id
     )
 SELECT
     CONCAT('S', LPAD(n + 1, 6, '0')),
     CONCAT('生徒', n + 1),
     IF((n % 2) = 0, '男', '女'),
     CONCAT('住所', n + 1),
-    (n % 3) + 1 AS Grade, -- 1..3
-    CHAR(65 + (n % 8)) AS Class, -- A..H
-    CONCAT('担任', (n % 200) + 1) AS Teacher,
-    /* EnrollmentDate: 年=現在年-(学年-1), 月=4 or (稀に 5..3), 日=1 */
+    (n % 3) + 1 AS grade, -- 1..3
+    CHAR(65 + (n % 8)) AS class, -- A..H
+    CONCAT('担任',
+         LPAD(((n % 200) + 1), 4, '0'),
+         '-', CHAR(65 + (n % 8)))   AS teacher,
+    /* enrollment_date: 年=現在年-(学年-1), 月=4 or (稀に 5..3), 日=1 */
     STR_TO_DATE(
         CONCAT(
             YEAR(CURDATE()) - ((n % 3)),
@@ -195,35 +197,37 @@ SELECT
             '-01'
         ),
         '%Y-%m-%d'
-    ) AS EnrollmentDate,
-    NULL AS GraduationDate,
-    LPAD(((n % 200) + 1), 4, '0') AS SchoolID
+    ) AS enrollment_date,
+    NULL AS graduation_date,
+    LPAD(((n % 200) + 1), 4, '0') AS school_id
 FROM tmp_seq
 WHERE
     n < 20000;
 
--- B) 入学前（1000）: Grade=0, 入学日は将来（概ね来年4/1、稀に5〜3月の1日）
+-- B) 入学前（1000）: grade=0, 入学日は将来（概ね来年4/1、稀に5〜3月の1日）
 INSERT INTO
-    Student (
-        StudentID,
-        Name,
-        Gender,
-        Address,
-        Grade,
-        Class,
-        Teacher,
-        EnrollmentDate,
-        GraduationDate,
-        SchoolID
+    students (
+        student_Id,
+        name,
+        gender,
+        address,
+        grade,
+        class,
+        teacher,
+        enrollment_date,
+        graduation_date,
+        school_id
     )
 SELECT
     CONCAT('S', LPAD(n + 1, 6, '0')),
     CONCAT('入学前', n - 20000 + 1),
     IF((n % 2) = 0, '男', '女'),
     CONCAT('住所', n + 1),
-    0 AS Grade,
-    CHAR(65 + (n % 8)) AS Class,
-    CONCAT('担任', (n % 200) + 1) AS Teacher,
+    0 AS grade,
+    CHAR(65 + (n % 8)) AS class,
+    CONCAT('担任',
+         LPAD(((n % 200) + 1), 4, '0'),
+         '-', CHAR(65 + (n % 8)))   AS teacher,
     STR_TO_DATE(
         CONCAT(
             YEAR(CURDATE()) + 1,
@@ -248,36 +252,38 @@ SELECT
             '-01'
         ),
         '%Y-%m-%d'
-    ) AS EnrollmentDate,
-    NULL AS GraduationDate,
-    LPAD(((n % 200) + 1), 4, '0') AS SchoolID
+    ) AS enrollment_date,
+    NULL AS graduation_date,
+    LPAD(((n % 200) + 1), 4, '0') AS school_id
 FROM tmp_seq
 WHERE
     n BETWEEN 20000 AND 20999;
 
--- C) 卒業（1000）: Grade=9, 卒業日は 3/31。就学年数は 3 年が大半、稀に 4〜6 年
+-- C) 卒業（1000）: grade=9, 卒業日は 3/31。就学年数は 3 年が大半、稀に 4〜6 年
 INSERT INTO
-    Student (
-        StudentID,
-        Name,
-        Gender,
-        Address,
-        Grade,
-        Class,
-        Teacher,
-        EnrollmentDate,
-        GraduationDate,
-        SchoolID
+    students (
+        student_Id,
+        name,
+        gender,
+        address,
+        grade,
+        class,
+        teacher,
+        enrollment_date,
+        graduation_date,
+        school_id
     )
 SELECT
     CONCAT('S', LPAD(n + 1, 6, '0')),
     CONCAT('卒業生', n - 21000 + 1),
     IF((n % 2) = 0, '男', '女'),
     CONCAT('住所', n + 1),
-    9 AS Grade,
-    CHAR(65 + (n % 8)) AS Class,
-    CONCAT('担任', (n % 200) + 1) AS Teacher,
-    -- EnrollmentDate = (GraduationYear - 就学年数)-MM-01
+    9 AS grade,
+    CHAR(65 + (n % 8)) AS class,
+    CONCAT('担任',
+         LPAD(((n % 200) + 1), 4, '0'),
+         '-', CHAR(65 + (n % 8)))   AS teacher,
+    -- enrollment_date = (GraduationYear - 就学年数)-MM-01
     STR_TO_DATE(
         CONCAT(
             -- 就学年数: 3年が大半、稀に 4/5/6 年（ごく小数）
@@ -309,29 +315,29 @@ SELECT
             '-01'
         ),
         '%Y-%m-%d'
-    ) AS EnrollmentDate,
-    -- GraduationDate = 卒業年の3/31
+    ) AS enrollment_date,
+    -- graduation_date = 卒業年の3/31
     STR_TO_DATE(
         CONCAT(
             YEAR(CURDATE()) - (n % 3),
             '-03-31'
         ),
         '%Y-%m-%d'
-    ) AS GraduationDate,
-    LPAD(((n % 200) + 1), 4, '0') AS SchoolID
+    ) AS graduation_date,
+    LPAD(((n % 200) + 1), 4, '0') AS school_id
 FROM tmp_seq
 WHERE
     n BETWEEN 21000 AND 21999;
 
 -- =========================================
 -- 3) 部活（在学 + 卒業生のみ、2/3 が所属）
---    入学前(Grade=0)は対象外
+--    入学前(grade=0)は対象外
 -- =========================================
 INSERT INTO
-    Club (ID, StudentID, ClubName)
-SELECT CONCAT('C', LPAD(n + 1, 7, '0')) AS ID, CONCAT('S', LPAD(n + 1, 6, '0')) AS StudentID, ELT(
+    clubs (ID, student_Id, club_name)
+SELECT CONCAT('C', LPAD(n + 1, 7, '0')) AS ID, CONCAT('S', LPAD(n + 1, 6, '0')) AS student_Id, ELT(
         (n % 10) + 1, 'サッカー', '野球', 'バスケ', 'テニス', '吹奏楽', '美術', '陸上', '囲碁', '将棋', '水泳'
-    ) AS ClubName
+    ) AS club_name
 FROM tmp_seq
 WHERE (
         n < 20000
@@ -349,12 +355,12 @@ CREATE TEMPORARY TABLE subjects5 ( subject VARCHAR(20) PRIMARY KEY );
 INSERT INTO subjects5 VALUES ('国語'), ('数学'), ('英語'), ('理科'), ('社会');
 
 INSERT INTO
-    Score (StudentID, Subject, Score)
-SELECT CONCAT('S', LPAD(s.n + 1, 6, '0')) AS StudentID, subj.subject AS Subject, LEAST(
+    scores (student_Id, subject, score)
+SELECT CONCAT('S', LPAD(s.n + 1, 6, '0')) AS student_Id, subj.subject AS subject, LEAST(
         99, 50 + (s.n % 50) + (
             ASCII(SUBSTRING(subj.subject, 1, 1)) % 5
         )
-    ) AS Score
+    ) AS score
 FROM tmp_seq s
     JOIN subjects5 subj
 WHERE (

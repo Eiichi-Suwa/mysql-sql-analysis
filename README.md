@@ -31,7 +31,7 @@ MySQLを使ったSQLや実行計画を学習するためのリポジトリです
   ![create-now](./assets/create-now.png)
 1. `VSCode`が起動しますが、画面右下が`リモートを開いています...`の間は待ちます。<br>
   ![vscode-setup-now](./assets/vscode-setup-now.png)
-1. 画面右下が`Codespace`になった場合は、`VSCode`が起動しました。<br>
+1. 画面左下が`Codespace`になった場合は、`VSCode`が起動しました。<br>
   ![vscode-setup-finish](./assets/vscode-setup-finish.png)
 1. `MySQL`に接続するため、右側の筒状のアイコンをクリックして`Create connection`をクリックします。（もし、`Create connection`をクリックしても反応が無い場合は、Webブラウザをリロードしてみてください）<br>
   ![new-connection](./assets/new-connection.png)

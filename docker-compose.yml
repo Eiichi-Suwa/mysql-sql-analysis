@@ -5,8 +5,6 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      user: ${MYSQL_USER}
-      password: ${MYSQL_PASSWORD}
       database: mydatabase
       TZ: Asia/Tokyo
     command: >

@@ -7,7 +7,7 @@ MySQLを使ったSQLや実行計画を学習するためのリポジトリです
 - パスワードは各自考えてください。また、間違えてメモなどをコミットしないように気を付けてください。
 
 ## 使い方
-※ ローカルで`docker-compose.yml`を起動する場合は`.env`ファイルのユーザーIDとパスワードを設定してから、起動してください。<br>ここでは`Codespaces`で起動する方法を記載しています。
+※ ローカルで`docker-compose.yml`を起動する場合は`.env`ファイルのユーザーIDとパスワードを設定してから、起動してください。<br><br>ここでは`Codespaces`で起動する方法を記載しています。
 
 1. このリポジトリをフォークするため、右上の`fork`をクリックする<br>
   ![fork](./assets/fork.png)
@@ -38,7 +38,7 @@ MySQLを使ったSQLや実行計画を学習するためのリポジトリです
   ![new-connection](./assets/new-connection.png)
 1. 画面中央に接続設定が表示されるので`Name`に`mysql`、`Host`に`mysql`、`database`に`mydatabase`、`Username`に`root`と入力する。<br>`Password`に`Secret`の`MYSQL_ROOT_PASSWORD`に設定した値を入力します。<br>
   ![connection-settings](./assets/connection-settings.png)
-1. `connect`をクリックして`Success!`を確認します<br>
+1. パスワードなどの入力欄の下にある`＋connect`ボタンをクリックして接続確認を行います。接続に成功した場合は画面上部に`Success!`が表示されることを確認します<br>
   ![connection-success](./assets/connection-success.png)
 1. `Save`をクリックして接続情報を保存すると、左のパネルに先ほど`Name`で指定した名前で接続情報が保存されます。<br>
   ![connection-info](./assets/connection-info.png)

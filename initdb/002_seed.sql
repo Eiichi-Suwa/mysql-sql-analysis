@@ -126,7 +126,7 @@ WHERE
 -- 1) 学校：200件
 -- =========================================
 INSERT INTO
-    schools  (
+    schools (
         school_id,
         school_location,
         district,
@@ -151,7 +151,7 @@ WHERE
 -- A) 在学（2万）
 INSERT INTO
     students (
-        student_Id,
+        student_id,
         name,
         gender,
         address,
@@ -163,19 +163,23 @@ INSERT INTO
         school_id
     )
 SELECT
-    CONCAT('S', LPAD(n + 1, 6, '0')),
-    CONCAT('生徒', n + 1),
-    IF((n % 2) = 0, '男', '女'),
-    CONCAT('住所', n + 1),
+    CONCAT('S', LPAD(n + 1, 6, '0')) AS student_id,
+    CONCAT('生徒', n + 1) AS name,
+    IF((n % 2) = 0, '男', '女') AS gender,
+    CONCAT('住所', n + 1) AS address,
     (n % 3) + 1 AS grade, -- 1..3
     CHAR(65 + (n % 8)) AS class, -- A..H
-    CONCAT('担任',
-         LPAD(((n % 200) + 1), 4, '0'),
-         '-', CHAR(65 + (n % 8)))   AS teacher,
+    -- 同一「年度×クラス」で同一担任（在学は常に当年度）
+    CONCAT(
+        '担任',
+        1 + (
+            (YEAR(CURDATE()) * 8 + (n % 8)) % 200
+        )
+    ) AS teacher,
     /* enrollment_date: 年=現在年-(学年-1), 月=4 or (稀に 5..3), 日=1 */
     STR_TO_DATE(
         CONCAT(
-            YEAR(CURDATE()) - ((n % 3)),
+            YEAR(CURDATE()) - (n % 3),
             '-',
             CASE
                 WHEN (n % 20) = 0 THEN ELT(
@@ -204,10 +208,10 @@ FROM tmp_seq
 WHERE
     n < 20000;
 
--- B) 入学前（1000）: grade=0, 入学日は将来（概ね来年4/1、稀に5〜3月の1日）
+-- B) 入学前（grade=0, 入学日は将来（概ね来年4/1、稀に5〜3月の1日）, teacher_year = 入学年度）
 INSERT INTO
     students (
-        student_Id,
+        student_id,
         name,
         gender,
         address,
@@ -225,9 +229,14 @@ SELECT
     CONCAT('住所', n + 1),
     0 AS grade,
     CHAR(65 + (n % 8)) AS class,
-    CONCAT('担任',
-         LPAD(((n % 200) + 1), 4, '0'),
-         '-', CHAR(65 + (n % 8)))   AS teacher,
+    CONCAT(
+        '担任',
+        1 + (
+            (
+                (YEAR(CURDATE()) + 1) * 8 + (n % 8)
+            ) % 200
+        )
+    ) AS teacher,
     STR_TO_DATE(
         CONCAT(
             YEAR(CURDATE()) + 1,
@@ -259,10 +268,10 @@ FROM tmp_seq
 WHERE
     n BETWEEN 20000 AND 20999;
 
--- C) 卒業（1000）: grade=9, 卒業日は 3/31。就学年数は 3 年が大半、稀に 4〜6 年
+-- C) 卒業（grade=9, 卒業日は 3/31。就学年数は 3 年が大半、稀に 4〜6 年, teacher_year = 卒業年度）
 INSERT INTO
     students (
-        student_Id,
+        student_id,
         name,
         gender,
         address,
@@ -280,10 +289,15 @@ SELECT
     CONCAT('住所', n + 1),
     9 AS grade,
     CHAR(65 + (n % 8)) AS class,
-    CONCAT('担任',
-         LPAD(((n % 200) + 1), 4, '0'),
-         '-', CHAR(65 + (n % 8)))   AS teacher,
-    -- enrollment_date = (GraduationYear - 就学年数)-MM-01
+    CONCAT(
+        '担任',
+        1 + (
+            (
+                (YEAR(CURDATE()) - (n % 3)) * 8 + (n % 8)
+            ) % 200
+        )
+    ) AS teacher,
+    /* enrollment_date: 年=現在年-(学年-1), 月=4 or (稀に 5..3), 日=1 */
     STR_TO_DATE(
         CONCAT(
             -- 就学年数: 3年が大半、稀に 4/5/6 年（ごく小数）
@@ -334,8 +348,8 @@ WHERE
 --    入学前(grade=0)は対象外
 -- =========================================
 INSERT INTO
-    clubs (ID, student_Id, club_name)
-SELECT CONCAT('C', LPAD(n + 1, 7, '0')) AS ID, CONCAT('S', LPAD(n + 1, 6, '0')) AS student_Id, ELT(
+    clubs (id, student_id, club_name)
+SELECT CONCAT('C', LPAD(n + 1, 7, '0')) AS id, CONCAT('S', LPAD(n + 1, 6, '0')) AS student_id, ELT(
         (n % 10) + 1, 'サッカー', '野球', 'バスケ', 'テニス', '吹奏楽', '美術', '陸上', '囲碁', '将棋', '水泳'
     ) AS club_name
 FROM tmp_seq
@@ -355,8 +369,8 @@ CREATE TEMPORARY TABLE subjects5 ( subject VARCHAR(20) PRIMARY KEY );
 INSERT INTO subjects5 VALUES ('国語'), ('数学'), ('英語'), ('理科'), ('社会');
 
 INSERT INTO
-    scores (student_Id, subject, score)
-SELECT CONCAT('S', LPAD(s.n + 1, 6, '0')) AS student_Id, subj.subject AS subject, LEAST(
+    scores (student_id, subject, score)
+SELECT CONCAT('S', LPAD(s.n + 1, 6, '0')) AS student_id, subj.subject AS subject, LEAST(
         99, 50 + (s.n % 50) + (
             ASCII(SUBSTRING(subj.subject, 1, 1)) % 5
         )
@@ -368,7 +382,7 @@ WHERE (
         OR (s.n BETWEEN 21000 AND 21999)
     );
 
--- （任意の後片付け）
+-- （任意）後片付け
 DROP TEMPORARY TABLE IF EXISTS subjects5;
 
 DROP TEMPORARY TABLE IF EXISTS tmp_seq;

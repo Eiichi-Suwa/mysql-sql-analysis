@@ -10,20 +10,17 @@ MySQLを使ったSQLや実行計画を学習するためのリポジトリです
 ※ ローカルで`docker-compose.yml`を起動する場合は`.env`ファイルのユーザーIDとパスワードを設定してから、起動してください。<br><br>ここでは`Codespaces`で起動する方法を記載しています。
 
 1. このリポジトリをフォークするため、右上の`fork`をクリックする<br>
-  ![fork](./assets/fork.png)
-1. フォークが完了すると XXX になる
+  ![start-fork](./assets/start-fork.png)
+1. `Create fork`ボタンをクリックして、フォーク（自分のアカウントにコピーして新しいリポジトリを作成）します。<br>
+  ![select-fork-option](./assets/select-fork-option.png)
 1. `.env.sample`の内容を設定するために、`Settings`タブ を開きます。<br>
   ![settings-tab](./assets/settings-tab.png)
 1. 左のメニューから `Secrets and variables` ＞ `Codespaces` を開きます。<br>
   ![secrets-and-variables](./assets/secrets-and-variables.png)
-1. `new repository Secrets`ボタンをクリックして、3つのシークレットを設定します。<br>
+1. `new repository Secrets`ボタンをクリックして、シークレットを設定します。<br>
   ![new-secrets](./assets/new-secrets.png)
 1. `Name`に`MYSQL_ROOT_PASSWORD`と入力して、`Secret`に適当なパスワードを入力します（後ほど使いますのでメモしてください）。<br>
   ![set-root-password](./assets/set-root-password.png)
-1. `Name`に`MYSQL_PASSWORD`と入力して、`Secret`に適当なパスワードを入力します（後ほど使いますのでメモしてください）。<br>
-  ![set-password](./assets/set-password.png)
-1. `Name`に`MYSQL_USER`と入力して、`Secret`に適当なユーザーIDを入力します（後ほど使いますのでメモしてください）。<br>
-  ![set-user](./assets/set-user.png)
 1. シークレットの設定が完了したら以下の画像のようになります。
   ![success-setting](./assets/success-setting.png)
 1. シークレット完了後、`Codespace`を起動するため、`Code`タブに移動し、右上にある緑色の`code`のプルダウンメニューを開き、`Codespace`タブを開き、`Create codespace on main`をクリックします。

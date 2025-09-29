@@ -54,9 +54,9 @@ MySQLを使ったSQLや実行計画を学習するためのリポジトリです
 ## ER図（概念）
 ```mermaid
 erDiagram
-  SCHOOLS ||--o{ STUDENTS : "has"
-  STUDENTS ||--o{ SCORES : "has"
-  STUDENTS ||--o{ CLUBS : "joins"
+  SCHOOLS ||--o{ STUDENTS : ""
+  STUDENTS ||--o{ SCORES : ""
+  STUDENTS ||--o{ CLUBS : ""
 
   SCHOOLS {
     string 学校ID PK
